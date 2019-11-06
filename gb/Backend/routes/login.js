@@ -2,6 +2,8 @@ const express = require('express');
 const pool = require('../configFiles/connectionPooling');
 var mysql = require('mysql');
 const bcrypt = require('bcrypt-nodejs');
+var jwt = require('jsonwebtoken');
+
 
 const app = express.Router();
 
@@ -27,13 +29,13 @@ app.post('/login', (req, res) => {
 
             conn.query(sql, (err, result) => {
                 if (err) {
-                    res.writeHead(402, {
+                    res.writeHead(400, {
                         'Contnet-type': 'text/plain'
                     });
                     res.end("Invalid credentials");
                 } else {
                     if (result.length == 0 || !bcrypt.compareSync(req.body.userPassword, result[0].userPassword)) {//|| !bcrypt.compareSync(req.body.userPassword, result[0].userPassword))
-                        res.writeHead(400, {
+                        res.writeHead(402, {
                             'Content-type': 'text/plain'
                         });
                         console.log("Invalid credentials db");
@@ -41,21 +43,27 @@ app.post('/login', (req, res) => {
                     } else {
                         console.log(result);
                         console.log("local Storage: ", req.session.userEmail);
+                        var temp = {
+                            userName : result[0].UserName,
+                            accountType : result[0].accountType,
+                            userEmail: result[0].userEmail,
+                        }
+                        const token=jwt.sign(temp,'secretkey')
 
-                        res.cookie('cookie', result[0].userEmail, {
-                            maxAge: 360000,
-                            httpOnly: false,
-                            path: '/'
-                        });
-                        console.log("res.cookie",res.cookie);
 
                         req.session.userEmail = result[0].userEmail;
                         console.log("req.session.userEmail" + req.session.userEmail);
                         res.writeHead(200, {
                             'Content-type': 'text/plain'
                         });
+                        var Result = {
+                            userName : result[0].userName,
+                            accountType : result[0].accountType,
+                            userEmail: result[0].userEmail,
+                            jwt : token
+                        }
                         // res.send(result[0].accountType)
-                        res.end(JSON.stringify(result[0]));
+                        res.end(JSON.stringify(Result));
                         console.log("Login successful");
                     }
                 }
