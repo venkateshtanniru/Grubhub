@@ -1,0 +1,242 @@
+SET SQL_MODE
+= "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT
+= 0;
+START TRANSACTION;
+SET time_zone
+= "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `273_grubhub`
+--
+
+-- --------Creating Database----------------
+
+drop database if exists grubhub;
+create database grubhub;
+use grubhub;
+
+--
+-- Table structure for table `userDetails`
+--
+
+CREATE TABLE `userDetails`
+(
+  `UserId` int
+(11) NOT NULL,
+  `UserName` varchar
+(255) NOT NULL,
+  `UserEmail` varchar
+(255) NOT NULL,
+  `UserPassword` varchar
+(255) NOT NULL,
+  `UserImage` varchar
+(255) DEFAULT NULL,
+  `UserPhone` varchar
+(255) DEFAULT NULL,
+  `UserAdr` varchar
+(255) DEFAULT NULL,
+  `UserZip` varchar
+(255) DEFAULT NULL,
+`Accounttype` int
+(11) NOT NULL,
+PRIMARY KEY
+(UserId)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `restaurant`
+--
+
+CREATE TABLE `restaurant`
+(
+  `RestaurantId` int
+(11) NOT NULL,
+  `UserId` int
+(11) NOT NULL,
+  `RestaurantName` varchar
+(255) NOT NULL,
+  `RestaurantAdr` varchar
+(255) DEFAULT NULL,
+  `RestaurantZip` varchar
+(255) DEFAULT NULL,
+  `RestaurantPhone` varchar
+(255) DEFAULT NULL,
+  `RestaurantImage` varchar
+(255) NOT NULL,
+PRIMARY KEY
+(RestaurantId),
+foreign key
+(UserId) references userDetails
+(UserId) ON
+DELETE CASCADE
+) ENGINE=InnoDB
+DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `cuisine`
+--
+
+CREATE TABLE `cuisine`
+(
+  `CuisineId` int
+(11) NOT NULL,
+  `RestaurantId` int
+(11) NOT NULL,
+  `CuisineName` varchar
+(255) NOT NULL,
+  `ItemType` varchar
+(255) NOT NULL,
+  `ItemName` varchar
+(255) NOT NULL,
+  `ItemDescription` varchar
+(255) DEFAULT NULL,
+  `ItemImage` varchar
+(255) NOT NULL,
+  `ItemPrice` varchar
+(255) NOT NULL,
+PRIMARY KEY
+(CuisineId),
+foreign key
+(RestaurantId) references restaurant
+(RestaurantId) ON
+DELETE CASCADE
+) ENGINE=InnoDB
+DEFAULT CHARSET=latin1;
+
+
+--
+-- Table structure for table `order`
+--
+
+CREATE TABLE `orderDetails`
+(
+    `OrderId` int
+(11) NOT NULL,
+    `UserId` int
+(11) NOT NULL,
+    `RestaurantId` int
+(11) NOT NULL,
+    `CuisineId` int
+(11) NOT NULL,
+    `Quantity` varchar
+(255) NOT NULL,
+    `OrderStatus` varchar
+(255) NOT NULL,
+    PRIMARY KEY
+(OrderId),
+    foreign key
+(UserId) references userDetails
+(UserId) ON
+DELETE CASCADE,
+    foreign key (RestaurantId)
+references restaurant
+(RestaurantId) ON
+DELETE CASCADE,
+    foreign key (CuisineId)
+references cuisine
+(CuisineId) ON
+DELETE CASCADE
+    ) ENGINE=InnoDB
+DEFAULT CHARSET=latin1;
+
+
+--
+-- AUTO_INCREMENT for table `userDetails`
+--
+ALTER TABLE `userDetails`
+  MODIFY `UserId` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `restaurant`
+--
+ALTER TABLE `restaurant`
+  MODIFY `RestaurantId` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `cuisine`
+--
+ALTER TABLE `cuisine`
+  MODIFY `CuisineId` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+--
+-- AUTO_INCREMENT for table `order`
+--
+ALTER TABLE `orderDetails`
+  MODIFY `OrderId` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+--
+-- DML Scripts for table `userDetails`
+--
+
+INSERT INTO userDetails
+  (`UserId`, `UserName`, `UserEmail`, `UserPassword`, `UserImage`, `UserPhone`, `UserAdr`, `UserZip`, `Accounttype`) VALUES
+(1, 'user1', 'user1@gmail.com', 'qwerty12345', '', '6698375673', 'San Carlos, San jose', '95112', 1),
+(2, 'user2', 'user2@gmail.com', 'qwerty12345', '', '6698345698', 'Loa Gatos, San jose', '95110', 2),
+(3, 'user3', 'user3@gmail.com', 'qwerty12345', '', '6698985623', '1 Washington SQ, San jose', '95119', 1),
+(4, 'user4', 'user4@gmail.com', 'qwerty12345', '', '6698875609', 'San Fernando, San jose', '95111', 2),
+(5, 'user5', 'user5@gmail.com', 'qwerty12345', '', '6698905612', 'Villa Torino, San jose', '95116', 1),
+(6, 'user6', 'user6@gmail.com', 'qwerty12345', '', '6698125656', 'Foundry Commons, San jose', '95115', 2);
+
+--
+-- DML Scripts for table `restaurant`
+--
+
+INSERT INTO restaurant
+  (`RestaurantId`, `UserId`, `RestaurantName`, `RestaurantAdr`, `RestaurantZip`, `RestaurantPhone`, `RestaurantImage`) VALUES
+(1, '1', 'Paradise', '101 San Jose, California', '95112', '4086567983', ''),
+(2, '1', 'Bawarchi', '102 San Jose, California', '95113', '4086567967', ''),
+(3, '2', 'Tandoori Oven', '103 San Jose, California', '95114', '4086567983', ''),
+(4, '2', 'Curry On', '104 San Jose, California', '95115', '4086567989', ''),
+(5, '3', 'Subway', '105 San Jose, California', '95116', '4086567939', ''),
+(6, '4', 'Panda Express', '106 San Jose, California', '95117', '4086567991', '');
+
+--
+-- DML Scripts for table `cuisine`
+--
+
+INSERT INTO cuisine
+  (`CuisineId`,`RestaurantId`, `CuisineName`, `ItemType`, `ItemName`, `ItemDescription`, `ItemImage`, `ItemPrice`) VALUES
+(1, '1', 'Indian', 'Breakfast', 'Idly', 'Smooth puffs made with rice batter', '', '$20'),
+(2, '1', 'North Indian', 'Breakfast', 'Dosa', 'Smooth Tacos made with rice batter', '', '$30'),
+(3, '2', 'South Indian', 'Lunch', 'Biryani', 'Boiled Basmati rice with different spices and flavours', '', '$15'),
+(4, '2', 'Italian', 'Lunch', 'Pizza', 'wheat-based dough topped with tomatoes, cheese, and various other ingredients', '', '$25'),
+(5, '3', 'Mexican', 'Appetizers', 'Chicken Kabob', 'Fried marinted chicken pieces', '', '$10'),
+(6, '4', 'Russian', 'Appetizers', 'Zakuski', 'cold cuts, cured fishes, mixed salads, kholodets', '', '$12');
+
+
+--
+-- DML Scripts for table `orderDetails`
+--
+
+INSERT INTO orderDetails
+  (`OrderId`, `UserId`, `RestaurantId`, `CuisineId`, `Quantity`, `OrderStatus`) VALUES
+(1, '1', '1', '1', '10', 'New'),
+(2, '1', '1', '2', '11', 'Preparing'),
+(3, '2', '2', '3', '6', 'Ready'),
+(4, '3', '2', '4', '4', 'Delivered'),
+(5, '4', '3', '5', '7', 'Preparing'),
+(6, '5', '4', '6', '9', 'Ready');
+
+
+COMMIT;
+
+
+
+-- Rollback Scripts
+
+drop table orderDetails;
+drop table userDetails;
+drop table restaurant;
+drop table cuisine;
