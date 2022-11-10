@@ -20,6 +20,6 @@
     "express-session": "^1.16.2",
     "express-sessions": "^1.0.6",
     "mathjs": "^6.2.1",
-    "mocha": "^5.2.0"
+    "mocha": "^10.1.0"
   }
 }
